@@ -18,14 +18,14 @@ export class UserDB
     return this.db.filter((user) => user.id === id)[0];
   }
   create(createDTO: CreateUserDto): User {
-    const created: User = {
+    const created = new User({
       id: randomUUID(),
       login: createDTO.login,
       password: createDTO.password,
       createdAt: Date.now(),
       updatedAt: Date.now(),
       version: 1,
-    };
+    });
     this.db.push(created);
     return created;
   }
