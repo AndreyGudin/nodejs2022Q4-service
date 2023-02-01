@@ -8,22 +8,22 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 export class TrackService {
   constructor(private readonly service: DB) {}
   create(createTrackDto: CreateTrackDto) {
-    return 'This action adds a new track';
+    return this.service.tracks.create(createTrackDto);
   }
 
   findAll() {
-    return `This action returns all track`;
+    return this.service.tracks.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} track`;
+  findOne(id: string) {
+    return this.service.tracks.findOne(id);
   }
 
-  update(id: number, updateTrackDto: UpdateTrackDto) {
-    return `This action updates a #${id} track`;
+  update(id: string, updateTrackDto: UpdateTrackDto) {
+    return this.service.tracks.update(id, updateTrackDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} track`;
+  remove(id: string) {
+    return this.service.tracks.delete(id);
   }
 }
