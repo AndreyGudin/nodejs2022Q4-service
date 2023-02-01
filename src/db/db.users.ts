@@ -32,8 +32,8 @@ export class UserDB
 
   update(id: string, updateDTO: UpdateUserDto): User {
     const idToUpdate = this.db.findIndex((user) => user.id === id);
-    const updated = Object.assign(this.db[idToUpdate], updateDTO);
-    return updated;
+    this.db[idToUpdate].password = updateDTO.newPassword;
+    return this.db[idToUpdate];
   }
 
   delete(id: string): User {
