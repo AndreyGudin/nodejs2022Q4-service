@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -28,7 +29,9 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.usersService.findOne(id);
+    const result = this.usersService.findOne(id);
+    if (result) return this.usersService.findOne(id);
+    else throw new NotFoundException();
   }
 
   @Patch(':id')
