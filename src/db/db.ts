@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserDB } from './db.users';
+import { UserDB } from './db.user';
 
 @Injectable()
 export default class DB {
