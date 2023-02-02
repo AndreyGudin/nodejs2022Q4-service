@@ -43,7 +43,7 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     const updated = this.usersService.findOne(id);
-    if (updated.password === updateUserDto.oldPassword)
+    if (updated && updated.password === updateUserDto.oldPassword)
       return this.usersService.update(id, updateUserDto);
     else throw new ForbiddenException();
   }
@@ -51,7 +51,6 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = this.usersService.remove(id);
-    console.log('result', result);
     if (result) return result;
     else throw new NotFoundException();
   }
