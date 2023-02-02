@@ -3,10 +3,14 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  Put,
+  ParseUUIDPipe,
 } from '@nestjs/common';
+
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -14,7 +18,7 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
-
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   create(@Body() createAlbumDto: CreateAlbumDto) {
     return this.albumService.create(createAlbumDto);
@@ -26,17 +30,20 @@ export class AlbumController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.albumService.findOne(id);
   }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAlbumDto: UpdateAlbumDto) {
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Put(':id')
+  update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateAlbumDto: UpdateAlbumDto,
+  ) {
     return this.albumService.update(id, updateAlbumDto);
   }
-
+  @UseInterceptors(ClassSerializerInterceptor)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.albumService.remove(id);
   }
 }
