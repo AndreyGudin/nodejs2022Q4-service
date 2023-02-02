@@ -36,8 +36,9 @@ export class UserDB
     return this.db[idToUpdate];
   }
 
-  delete(id: string): User {
+  delete(id: string): User | undefined {
     const idToDelete = this.db.findIndex((user) => user.id === id);
-    return this.db.splice(idToDelete, 1)[0];
+    if (idToDelete > -1) return this.db.splice(idToDelete, 1)[0];
+    else return;
   }
 }

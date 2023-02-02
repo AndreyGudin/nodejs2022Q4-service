@@ -50,6 +50,9 @@ export class UserController {
 
   @Delete(':id')
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.usersService.remove(id);
+    const result = this.usersService.remove(id);
+    console.log('result', result);
+    if (result) return result;
+    else throw new NotFoundException();
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import DB from 'src/db/db';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -22,7 +23,7 @@ export class UserService {
     return this.service.users.update(id, updateUserDto);
   }
 
-  remove(id: string) {
+  remove(id: string): User | undefined {
     return this.service.users.delete(id);
   }
 }
