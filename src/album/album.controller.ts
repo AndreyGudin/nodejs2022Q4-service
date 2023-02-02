@@ -9,6 +9,7 @@ import {
   ClassSerializerInterceptor,
   Put,
   ParseUUIDPipe,
+  NotFoundException,
 } from '@nestjs/common';
 
 import { AlbumService } from './album.service';
@@ -31,7 +32,9 @@ export class AlbumController {
 
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.albumService.findOne(id);
+    const result = this.albumService.findOne(id);
+    if (result) return this.albumService.findOne(id);
+    else throw new NotFoundException();
   }
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
@@ -44,6 +47,8 @@ export class AlbumController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Delete(':id')
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.albumService.remove(id);
+    const result = this.albumService.remove(id);
+    if (result) return result;
+    else throw new NotFoundException();
   }
 }
