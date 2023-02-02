@@ -9,6 +9,7 @@ import {
   ClassSerializerInterceptor,
   ParseUUIDPipe,
   Put,
+  NotFoundException,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
@@ -28,7 +29,9 @@ export class TrackController {
   }
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.trackService.findOne(id);
+    const result = this.trackService.findOne(id);
+    if (result) return this.trackService.findOne(id);
+    else throw new NotFoundException();
   }
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
@@ -41,6 +44,8 @@ export class TrackController {
 
   @Delete(':id')
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.trackService.remove(id);
+    const result = this.trackService.remove(id);
+    if (result) return result;
+    else throw new NotFoundException();
   }
 }
