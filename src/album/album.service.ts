@@ -23,6 +23,10 @@ export class AlbumService {
   }
 
   remove(id: string) {
+    const tracks = this.service.tracks.findAll();
+    tracks.forEach((track) => {
+      if (track.albumId === id) track.albumId = null;
+    });
     return this.service.albums.delete(id);
   }
 }
