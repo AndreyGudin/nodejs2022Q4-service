@@ -3,13 +3,14 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   ParseUUIDPipe,
   NotFoundException,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Put,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -36,12 +37,15 @@ export class UserController {
     else throw new NotFoundException();
   }
   @UseInterceptors(ClassSerializerInterceptor)
-  @Patch(':id')
+  @Put(':id')
   update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.usersService.update(id, updateUserDto);
+    const updated = this.usersService.findOne(id);
+    if (updated.password === updateUserDto.oldPassword)
+      return this.usersService.update(id, updateUserDto);
+    else throw new ForbiddenException();
   }
 
   @Delete(':id')
