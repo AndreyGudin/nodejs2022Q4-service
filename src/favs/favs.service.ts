@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFavDto } from './dto/create-fav.dto';
-import { UpdateFavDto } from './dto/update-fav.dto';
 
 @Injectable()
 export class FavsService {
@@ -14,10 +13,6 @@ export class FavsService {
 
   findOne(id: number) {
     return `This action returns a #${id} fav`;
-  }
-
-  update(id: number, updateFavDto: UpdateFavDto) {
-    return `This action updates a #${id} fav`;
   }
 
   remove(id: number) {
