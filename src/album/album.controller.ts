@@ -42,7 +42,9 @@ export class AlbumController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
-    return this.albumService.update(id, updateAlbumDto);
+    const result = this.albumService.update(id, updateAlbumDto);
+    if (result) return result;
+    else throw new NotFoundException();
   }
   @UseInterceptors(ClassSerializerInterceptor)
   @Delete(':id')

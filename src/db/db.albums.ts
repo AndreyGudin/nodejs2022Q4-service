@@ -26,9 +26,10 @@ export class AlbumsDB
     return created;
   }
 
-  update(id: string, updateDTO: UpdateAlbumDto): Album {
+  update(id: string, updateDTO: UpdateAlbumDto): Album | undefined {
     const idToUpdate = this.db.findIndex((album) => album.id === id);
-    return Object.assign(this.db[idToUpdate], updateDTO);
+    if (idToUpdate > -1) return Object.assign(this.db[idToUpdate], updateDTO);
+    else return;
   }
 
   delete(id: string): Album {
