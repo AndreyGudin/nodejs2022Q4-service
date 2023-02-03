@@ -1,21 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFavDto } from './dto/create-fav.dto';
+import DB from 'src/db/db';
+import { Fav, FavoritesResponse } from './entities/fav.entity';
 
 @Injectable()
 export class FavsService {
-  create(createFavDto: CreateFavDto) {
-    return 'This action adds a new fav';
+  constructor(private readonly service: DB) {}
+  create(id: string, key: keyof Fav) {
+    const obj = this.service[key].findOne(id);
+    if (obj) return this.service.favs.create(id, key);
+    else return;
   }
 
-  findAll() {
-    return `This action returns all favs`;
+  findAll(): FavoritesResponse {
+    const response: FavoritesResponse = {
+      artists: this.service.favs.db.artists.map((id) => {
+        return this.service.artists.findOne(id);
+      }),
+      albums: this.service.favs.db.albums.map((id) => {
+        return this.service.albums.findOne(id);
+      }),
+      tracks: this.service.favs.db.tracks.map((id) => {
+        return this.service.tracks.findOne(id);
+      }),
+    };
+    return response;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} fav`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} fav`;
+  remove(id: string, key: keyof Fav) {
+    const obj = this.service[key].findOne(id);
+    if (obj) return this.service.favs.delete(id, key);
+    else return;
   }
 }

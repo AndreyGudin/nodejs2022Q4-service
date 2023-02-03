@@ -1,7 +1,11 @@
 import { Fav } from 'src/favs/entities/fav.entity';
 
 export class FavDB {
-  db: Fav;
+  db: Fav = {
+    albums: [],
+    tracks: [],
+    artists: [],
+  };
   constructor() {
     this.db.albums = [];
     this.db.tracks = [];

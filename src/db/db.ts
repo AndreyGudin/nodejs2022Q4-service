@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AlbumsDB } from './db.albums';
 
 import { ArtistsDB } from './db.artists';
+import { FavDB } from './db.favs';
 import { TrackDB } from './db.track';
 import { UserDB } from './db.user';
 
@@ -11,4 +12,5 @@ export default class DB {
   tracks = new TrackDB();
   artists = new ArtistsDB();
   albums = new AlbumsDB();
+  favs = new FavDB();
 }

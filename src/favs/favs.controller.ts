@@ -1,24 +1,37 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Delete,
+  ParseUUIDPipe,
+  NotFoundException,
+} from '@nestjs/common';
 import { FavsService } from './favs.service';
-import { CreateFavDto } from './dto/create-fav.dto';
 
 @Controller('favs')
 export class FavsController {
   constructor(private readonly favsService: FavsService) {}
 
   @Post('/track/:id')
-  createTrack(@Body() createFavDto: CreateFavDto) {
-    return this.favsService.create(createFavDto);
+  createTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = this.favsService.create(id, 'tracks');
+    if (result) return result;
+    else throw new NotFoundException();
   }
 
   @Post('/album/:id')
-  createAlbum(@Body() createFavDto: CreateFavDto) {
-    return this.favsService.create(createFavDto);
+  createAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = this.favsService.create(id, 'albums');
+    if (result) return result;
+    else throw new NotFoundException();
   }
 
   @Post('/artist/:id')
-  createArtist(@Body() createFavDto: CreateFavDto) {
-    return this.favsService.create(createFavDto);
+  createArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = this.favsService.create(id, 'artists');
+    if (result) return result;
+    else throw new NotFoundException();
   }
 
   @Get()
@@ -27,17 +40,23 @@ export class FavsController {
   }
 
   @Delete('/artist/:id')
-  removeArtist(@Param('id') id: string) {
-    return this.favsService.remove(+id);
+  removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = this.favsService.remove(id, 'artists');
+    if (result) return result;
+    else throw new NotFoundException();
   }
 
   @Delete('/album/:id')
-  removeAlbum(@Param('id') id: string) {
-    return this.favsService.remove(+id);
+  removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = this.favsService.remove(id, 'albums');
+    if (result) return result;
+    else throw new NotFoundException();
   }
 
   @Delete('/track/:id')
-  removeTrack(@Param('id') id: string) {
-    return this.favsService.remove(+id);
+  removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = this.favsService.remove(id, 'tracks');
+    if (result) return result;
+    else throw new NotFoundException();
   }
 }
