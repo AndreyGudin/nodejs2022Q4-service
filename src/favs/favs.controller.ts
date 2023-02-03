@@ -16,6 +16,7 @@ export class FavsController {
   @Post('/track/:id')
   createTrack(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = this.favsService.create(id, 'tracks');
+    console.log('result', result);
     if (result) return result;
     else throw new NotFoundException();
   }

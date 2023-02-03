@@ -15,6 +15,9 @@ export class TrackDB
     return this.db;
   }
   findOne(id: string): Track {
+    const result = this.db.filter((track) => track.id === id)[0];
+    console.log('first');
+    console.log('result track', result);
     return this.db.filter((track) => track.id === id)[0];
   }
   create(createDTO: CreateTrackDto): Track {

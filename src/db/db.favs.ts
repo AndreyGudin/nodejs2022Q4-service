@@ -16,7 +16,7 @@ export class FavDB {
   }
 
   create(id: string, key: keyof Fav): string {
-    this.db.tracks[key].push(id);
+    this.db[key].push(id);
     return id;
   }
 
