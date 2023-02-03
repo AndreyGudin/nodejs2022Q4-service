@@ -33,6 +33,7 @@ export class TrackDB
 
   delete(id: string): Track {
     const idToDelete = this.db.findIndex((track) => track.id === id);
-    return this.db.splice(idToDelete, 1)[0];
+    if (idToDelete > -1) return this.db.splice(idToDelete, 1)[0];
+    else return;
   }
 }

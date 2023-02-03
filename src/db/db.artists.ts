@@ -33,6 +33,7 @@ export class ArtistsDB
 
   delete(id: string): Artist {
     const idToDelete = this.db.findIndex((artist) => artist.id === id);
-    return this.db.splice(idToDelete, 1)[0];
+    if (idToDelete > -1) return this.db.splice(idToDelete, 1)[0];
+    else return;
   }
 }

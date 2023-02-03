@@ -34,6 +34,7 @@ export class AlbumsDB
 
   delete(id: string): Album {
     const idToDelete = this.db.findIndex((album) => album.id === id);
-    return this.db.splice(idToDelete, 1)[0];
+    if (idToDelete > -1) return this.db.splice(idToDelete, 1)[0];
+    else return;
   }
 }
