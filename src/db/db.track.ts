@@ -28,7 +28,8 @@ export class TrackDB
 
   update(id: string, updateDTO: UpdateTrackDto): Track {
     const idToUpdate = this.db.findIndex((track) => track.id === id);
-    return Object.assign(this.db[idToUpdate], updateDTO);
+    if (idToUpdate > -1) return Object.assign(this.db[idToUpdate], updateDTO);
+    else return;
   }
 
   delete(id: string): Track {

@@ -39,7 +39,9 @@ export class TrackController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
-    return this.trackService.update(id, updateTrackDto);
+    const result = this.trackService.update(id, updateTrackDto);
+    if (result) return result;
+    else throw new NotFoundException();
   }
 
   @Delete(':id')

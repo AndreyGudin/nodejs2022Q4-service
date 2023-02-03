@@ -42,7 +42,9 @@ export class ArtistController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
-    return this.artistService.update(id, updateArtistDto);
+    const result = this.artistService.update(id, updateArtistDto);
+    if (result) return result;
+    else throw new NotFoundException();
   }
 
   @Delete(':id')

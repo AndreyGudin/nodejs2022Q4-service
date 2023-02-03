@@ -28,7 +28,8 @@ export class ArtistsDB
 
   update(id: string, updateDTO: UpdateArtistDto): Artist {
     const idToUpdate = this.db.findIndex((artist) => artist.id === id);
-    return Object.assign(this.db[idToUpdate], updateDTO);
+    if (idToUpdate > -1) return Object.assign(this.db[idToUpdate], updateDTO);
+    else return;
   }
 
   delete(id: string): Artist {
