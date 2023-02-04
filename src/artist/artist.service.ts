@@ -23,6 +23,12 @@ export class ArtistService {
   }
 
   remove(id: string) {
-    return this.service.artists.delete(id);
+    const toDelete = this.service.artists.delete(id);
+    if (toDelete) {
+      this.service.tracks.db.forEach((track) => {
+        if (track.artistId == id) track.artistId = null;
+      });
+    }
+    return toDelete;
   }
 }

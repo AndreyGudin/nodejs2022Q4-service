@@ -10,6 +10,7 @@ import {
   Put,
   ParseUUIDPipe,
   NotFoundException,
+  HttpCode,
 } from '@nestjs/common';
 
 import { ArtistService } from './artist.service';
@@ -48,6 +49,7 @@ export class ArtistController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = this.artistService.remove(id);
     if (result) return result;

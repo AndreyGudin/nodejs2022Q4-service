@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Album } from 'src/album/entities/album.entity';
 import { Artist } from 'src/artist/entities/artist.entity';
 
 import DB from 'src/db/db';
@@ -12,8 +13,11 @@ export class TrackService {
     let isArtistExist: Artist | boolean = this.service.artists.findOne(
       createTrackDto.artistId,
     );
-    const isAlbumExist = this.service.albums.findOne(createTrackDto.albumId);
+    let isAlbumExist: Album | boolean = this.service.albums.findOne(
+      createTrackDto.albumId,
+    );
     if (createTrackDto.artistId === null) isArtistExist = true;
+    if (createTrackDto.albumId === null) isAlbumExist = true;
     if (isArtistExist && isAlbumExist)
       return this.service.tracks.create(createTrackDto);
     else return;
