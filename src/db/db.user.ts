@@ -12,7 +12,8 @@ export class UserDB
     this.db = [];
   }
   findAll(): User[] {
-    return this.db;
+    const result = [...this.db];
+    return result;
   }
   findOne(id: string): User {
     return this.db.filter((user) => user.id === id)[0];

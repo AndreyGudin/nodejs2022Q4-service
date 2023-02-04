@@ -12,10 +12,11 @@ export class AlbumsDB
     this.db = [];
   }
   findAll(): Album[] {
-    return this.db;
+    const result = [...this.db];
+    return result;
   }
   findOne(id: string): Album {
-    return this.db.filter((album) => album.id === id)[0];
+    return Object.assign({}, this.db.filter((album) => album.id === id)[0]);
   }
   create(createDTO: CreateAlbumDto): Album {
     const created = new Album({

@@ -12,13 +12,11 @@ export class TrackDB
     this.db = [];
   }
   findAll(): Track[] {
-    return this.db;
+    const result = [...this.db];
+    return result;
   }
   findOne(id: string): Track {
-    const result = this.db.filter((track) => track.id === id)[0];
-    console.log('first');
-    console.log('result track', result);
-    return this.db.filter((track) => track.id === id)[0];
+    return Object.assign({}, this.db.filter((track) => track.id === id)[0]);
   }
   create(createDTO: CreateTrackDto): Track {
     const created = new Track({

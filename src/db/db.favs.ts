@@ -12,7 +12,8 @@ export class FavDB {
     this.db.artists = [];
   }
   findAll(): Fav {
-    return this.db;
+    const result = JSON.parse(JSON.stringify(this.db));
+    return result;
   }
 
   create(id: string, key: keyof Fav): string {
@@ -22,7 +23,8 @@ export class FavDB {
 
   delete(id: string, key: keyof Fav): string {
     const idToDelete = this.db[key].findIndex((trackId) => trackId === id);
-    if (idToDelete > -1) return this.db[key].splice(idToDelete, 1)[0];
+    const result = this.db[key].splice(idToDelete, 1)[0];
+    if (idToDelete > -1) return result;
     else return;
   }
 }

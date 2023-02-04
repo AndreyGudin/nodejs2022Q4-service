@@ -12,7 +12,6 @@ export class AlbumService {
       createAlbumDto.artistId,
     );
     if (createAlbumDto.artistId === null) isExist = true;
-    console.log('artistId', createAlbumDto.artistId);
     if (isExist) return this.service.albums.create(createAlbumDto);
     else return;
   }

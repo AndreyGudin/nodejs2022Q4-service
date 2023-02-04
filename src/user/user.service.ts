@@ -12,8 +12,6 @@ export class UserService {
   }
 
   findAll() {
-    const obj = this.service.artists.findAll();
-    console.log('obj', obj);
     return this.service.users.findAll();
   }
 
