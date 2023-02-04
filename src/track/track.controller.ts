@@ -21,7 +21,9 @@ export class TrackController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   create(@Body() createTrackDto: CreateTrackDto) {
-    return this.trackService.create(createTrackDto);
+    const result = this.trackService.create(createTrackDto);
+    if (result) return result;
+    else return '';
   }
   @Get()
   findAll() {

@@ -8,7 +8,11 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 export class TrackService {
   constructor(private readonly service: DB) {}
   create(createTrackDto: CreateTrackDto) {
-    return this.service.tracks.create(createTrackDto);
+    const isArtistExist = this.service.artists.findOne(createTrackDto.artistId);
+    const isAlbumExist = this.service.albums.findOne(createTrackDto.albumId);
+    if (isArtistExist && isAlbumExist)
+      return this.service.tracks.create(createTrackDto);
+    else return;
   }
 
   findAll() {
