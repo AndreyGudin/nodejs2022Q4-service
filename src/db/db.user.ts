@@ -33,6 +33,8 @@ export class UserDB
   update(id: string, updateDTO: UpdateUserDto): User {
     const idToUpdate = this.db.findIndex((user) => user.id === id);
     this.db[idToUpdate].password = updateDTO.newPassword;
+    this.db[idToUpdate].version += 1;
+    this.db[idToUpdate].updatedAt = Date.now();
     return this.db[idToUpdate];
   }
 

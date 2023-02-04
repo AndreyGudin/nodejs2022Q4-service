@@ -11,6 +11,7 @@ import {
   ClassSerializerInterceptor,
   Put,
   ForbiddenException,
+  HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -43,12 +44,15 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     const updated = this.usersService.findOne(id);
-    if (updated && updated.password === updateUserDto.oldPassword)
-      return this.usersService.update(id, updateUserDto);
-    else throw new ForbiddenException();
+    if (updated) {
+      if (updated.password === updateUserDto.oldPassword)
+        return this.usersService.update(id, updateUserDto);
+      else throw new ForbiddenException();
+    } else throw new NotFoundException();
   }
 
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = this.usersService.remove(id);
     if (result) return result;
