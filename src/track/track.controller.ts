@@ -10,6 +10,7 @@ import {
   ParseUUIDPipe,
   Put,
   NotFoundException,
+  HttpCode,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
@@ -47,6 +48,7 @@ export class TrackController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = this.trackService.remove(id);
     if (result) return result;
