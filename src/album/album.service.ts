@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Artist } from 'src/artist/entities/artist.entity';
 import DB from 'src/db/db';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -7,7 +8,10 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 export class AlbumService {
   constructor(private readonly service: DB) {}
   create(createAlbumDto: CreateAlbumDto) {
-    const isExist = this.service.artists.findOne(createAlbumDto.artistId);
+    let isExist: Artist | boolean = this.service.artists.findOne(
+      createAlbumDto.artistId,
+    );
+    if (createAlbumDto.artistId === null) isExist = true;
     console.log('artistId', createAlbumDto.artistId);
     if (isExist) return this.service.albums.create(createAlbumDto);
     else return;

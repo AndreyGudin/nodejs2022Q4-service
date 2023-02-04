@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Artist } from 'src/artist/entities/artist.entity';
 
 import DB from 'src/db/db';
 import { CreateTrackDto } from './dto/create-track.dto';
@@ -8,8 +9,11 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 export class TrackService {
   constructor(private readonly service: DB) {}
   create(createTrackDto: CreateTrackDto) {
-    const isArtistExist = this.service.artists.findOne(createTrackDto.artistId);
+    let isArtistExist: Artist | boolean = this.service.artists.findOne(
+      createTrackDto.artistId,
+    );
     const isAlbumExist = this.service.albums.findOne(createTrackDto.albumId);
+    if (createTrackDto.artistId === null) isArtistExist = true;
     if (isArtistExist && isAlbumExist)
       return this.service.tracks.create(createTrackDto);
     else return;

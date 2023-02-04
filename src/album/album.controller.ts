@@ -11,6 +11,7 @@ import {
   ParseUUIDPipe,
   NotFoundException,
 } from '@nestjs/common';
+import { HttpCode } from '@nestjs/common/decorators';
 
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -50,6 +51,7 @@ export class AlbumController {
   }
   @UseInterceptors(ClassSerializerInterceptor)
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = this.albumService.remove(id);
     if (result) return result;
