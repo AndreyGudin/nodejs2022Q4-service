@@ -22,7 +22,9 @@ export class AlbumController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   create(@Body() createAlbumDto: CreateAlbumDto) {
-    return this.albumService.create(createAlbumDto);
+    const result = this.albumService.create(createAlbumDto);
+    if (result) return result;
+    else return '';
   }
 
   @Get()

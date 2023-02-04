@@ -7,7 +7,9 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 export class AlbumService {
   constructor(private readonly service: DB) {}
   create(createAlbumDto: CreateAlbumDto) {
-    return this.service.albums.create(createAlbumDto);
+    const isExist = this.service.users.findOne(createAlbumDto.artistId);
+    if (isExist) return this.service.albums.create(createAlbumDto);
+    else return;
   }
 
   findAll() {
