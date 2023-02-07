@@ -17,10 +17,10 @@ export class User {
   version: number;
 
   @Column()
-  createdAt: number;
+  createdAt: Date;
 
   @Column()
-  updatedAt: number;
+  updatedAt: Date;
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);

@@ -1,18 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import DB from 'src/db/db';
+import { Repository } from 'typeorm/repository/Repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly service: DB) {}
-  create(createUserDto: CreateUserDto) {
-    return this.service.users.create(createUserDto);
+  constructor(
+    @InjectRepository(User)
+    private readonly user: Repository<User>,
+    private readonly service: DB,
+  ) {}
+  async create(createUserDto: CreateUserDto) {
+    const createdUser = new User({
+      login: createUserDto.login,
+      password: createUserDto.password,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      version: 1,
+    });
+    return await this.user.save(createdUser);
   }
 
-  findAll() {
-    return this.service.users.findAll();
+  async findAll() {
+    return await this.user.find();
   }
 
   findOne(id: string) {
@@ -23,7 +36,7 @@ export class UserService {
     return this.service.users.update(id, updateUserDto);
   }
 
-  remove(id: string): User | undefined {
+  remove(id: string) {
     const tracks = this.service.tracks.findAll();
     const albums = this.service.albums.findAll();
     tracks.forEach((track) => {

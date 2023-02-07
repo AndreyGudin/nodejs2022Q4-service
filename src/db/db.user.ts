@@ -23,8 +23,8 @@ export class UserDB
       id: randomUUID(),
       login: createDTO.login,
       password: createDTO.password,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
       version: 1,
     });
     this.db.push(created);
@@ -35,7 +35,7 @@ export class UserDB
     const idToUpdate = this.db.findIndex((user) => user.id === id);
     this.db[idToUpdate].password = updateDTO.newPassword;
     this.db[idToUpdate].version += 1;
-    this.db[idToUpdate].updatedAt = Date.now();
+    this.db[idToUpdate].updatedAt = new Date();
     return this.db[idToUpdate];
   }
 
