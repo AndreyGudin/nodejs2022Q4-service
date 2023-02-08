@@ -31,15 +31,15 @@ export class UserController {
   })
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.usersService.create(createUserDto);
   }
 
   @ApiResponse({ status: 200, type: [User] })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    return await this.usersService.findAll();
   }
 
   @ApiResponse({ status: 200, type: User })
@@ -50,8 +50,8 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.usersService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = await this.usersService.findOne(id);
     if (result) return this.usersService.findOne(id);
     else throw new NotFoundException();
   }
@@ -64,11 +64,11 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    const updated = this.usersService.findOne(id);
+    const updated = await this.usersService.findOne(id);
     if (updated) {
       if (updated.password === updateUserDto.oldPassword)
         return this.usersService.update(id, updateUserDto);
@@ -84,8 +84,8 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.usersService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = await this.usersService.remove(id);
     if (result) return result;
     else throw new NotFoundException();
   }

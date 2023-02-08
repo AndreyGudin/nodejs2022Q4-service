@@ -28,15 +28,27 @@ export class UserService {
     return await this.user.find();
   }
 
-  findOne(id: string) {
-    return this.service.users.findOne(id);
+  async findOne(id: string) {
+    const user = await this.user.findOne({ where: { id } });
+    if (user) return user;
+    return;
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return this.service.users.update(id, updateUserDto);
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.user.findOne({ where: { id } });
+    if (user) {
+      user.password = updateUserDto.newPassword;
+      user.version += 1;
+      user.updatedAt = new Date();
+      return await this.user.save(user);
+    }
+    return;
   }
 
-  remove(id: string) {
+  async remove(id: string) {
+    const result = await this.user.delete(id);
+    if (result.affected === 0) return;
+    return id;
     const tracks = this.service.tracks.findAll();
     const albums = this.service.albums.findAll();
     tracks.forEach((track) => {
