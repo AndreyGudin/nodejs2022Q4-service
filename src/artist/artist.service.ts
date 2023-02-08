@@ -1,34 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import DB from 'src/db/db';
+import { Repository } from 'typeorm';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { Artist } from './entities/artist.entity';
 
 @Injectable()
 export class ArtistService {
-  constructor(private readonly service: DB) {}
-  create(createArtistDto: CreateArtistDto) {
-    return this.service.artists.create(createArtistDto);
+  constructor(
+    @InjectRepository(Artist)
+    private readonly artist: Repository<Artist>,
+    private readonly service: DB,
+  ) {}
+  async create(createArtistDto: CreateArtistDto) {
+    const artist = this.artist.create(createArtistDto);
+    return await this.artist.save(artist);
   }
 
-  findAll() {
-    return this.service.artists.findAll();
+  async findAll() {
+    return await this.artist.find();
   }
 
-  findOne(id: string) {
-    return this.service.artists.findOne(id);
+  async findOne(id: string) {
+    const artist = await this.artist.findOne({ where: { id } });
+    if (artist) return artist;
+    return;
   }
 
-  update(id: string, updateArtistDto: UpdateArtistDto) {
-    return this.service.artists.update(id, updateArtistDto);
-  }
-
-  remove(id: string) {
-    const toDelete = this.service.artists.delete(id);
-    if (toDelete) {
-      this.service.tracks.db.forEach((track) => {
-        if (track.artistId == id) track.artistId = null;
-      });
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
+    const artist = await this.artist.findOne({ where: { id } });
+    if (artist) {
+      Object.assign(artist, updateArtistDto);
+      return await this.artist.save(artist);
     }
-    return toDelete;
+    return;
+  }
+
+  async remove(id: string) {
+    const result = await this.artist.delete(id);
+    if (result.affected === 0) return;
+    return id;
   }
 }

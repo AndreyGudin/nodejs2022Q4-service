@@ -50,7 +50,7 @@ export class ArtistController {
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = this.artistService.findOne(id);
-    if (Object.keys(result).length > 0) return this.artistService.findOne(id);
+    if (result) return result;
     else throw new NotFoundException();
   }
 
