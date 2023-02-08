@@ -49,14 +49,5 @@ export class UserService {
     const result = await this.user.delete(id);
     if (result.affected === 0) return;
     return id;
-    const tracks = this.service.tracks.findAll();
-    const albums = this.service.albums.findAll();
-    tracks.forEach((track) => {
-      if (track.artistId === id) track.artistId = null;
-    });
-    albums.forEach((album) => {
-      if (album.artistId === id) album.artistId = null;
-    });
-    return this.service.users.delete(id);
   }
 }
