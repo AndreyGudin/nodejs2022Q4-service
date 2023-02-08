@@ -52,7 +52,7 @@ export class AlbumController {
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = this.albumService.findOne(id);
-    if (Object.keys(result).length > 0) return this.albumService.findOne(id);
+    if (result) return this.albumService.findOne(id);
     else throw new NotFoundException();
   }
 

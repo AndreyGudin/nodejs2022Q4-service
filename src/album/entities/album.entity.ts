@@ -22,10 +22,10 @@ export class Album {
   @ApiProperty()
   year: number;
 
-  @OneToOne(() => Artist)
+  @OneToOne(() => Artist, { onDelete: 'SET NULL' })
   @JoinColumn()
   @ApiProperty()
-  artistId: string | null;
+  artistId: string;
 
   constructor(partial: Partial<Album>) {
     Object.assign(this, partial);

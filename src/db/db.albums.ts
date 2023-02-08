@@ -19,12 +19,7 @@ export class AlbumsDB
     return Object.assign({}, this.db.filter((album) => album.id === id)[0]);
   }
   create(createDTO: CreateAlbumDto): Album {
-    const created = new Album({
-      id: randomUUID(),
-      ...createDTO,
-    });
-    this.db.push(created);
-    return created;
+    return;
   }
 
   update(id: string, updateDTO: UpdateAlbumDto): Album | undefined {

@@ -1,38 +1,66 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Artist } from 'src/artist/entities/artist.entity';
 import DB from 'src/db/db';
+import { Repository } from 'typeorm';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { Album } from './entities/album.entity';
 
 @Injectable()
 export class AlbumService {
-  constructor(private readonly service: DB) {}
-  create(createAlbumDto: CreateAlbumDto) {
-    let isExist: Artist | boolean = this.service.artists.findOne(
-      createAlbumDto.artistId,
-    );
-    if (createAlbumDto.artistId === null) isExist = true;
-    if (isExist) return this.service.albums.create(createAlbumDto);
-    else return;
-  }
-
-  findAll() {
-    return this.service.albums.findAll();
-  }
-
-  findOne(id: string) {
-    return this.service.albums.findOne(id);
-  }
-
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
-    return this.service.albums.update(id, updateAlbumDto);
-  }
-
-  remove(id: string) {
-    const tracks = this.service.tracks.findAll();
-    tracks.forEach((track) => {
-      if (track.albumId === id) track.albumId = null;
+  constructor(
+    @InjectRepository(Artist)
+    private readonly artist: Repository<Artist>,
+    @InjectRepository(Album)
+    private readonly album: Repository<Album>,
+    private readonly service: DB,
+  ) {}
+  async create(createAlbumDto: CreateAlbumDto) {
+    const isExist: Artist = await this.artist.findOne({
+      where: { id: createAlbumDto.artistId },
     });
-    return this.service.albums.delete(id);
+    if (isExist) {
+      const newAlbum = new Album({
+        name: createAlbumDto.name,
+        artistId: isExist.id,
+        year: createAlbumDto.year,
+      });
+
+      return await this.album.save(newAlbum);
+    }
+    return;
+  }
+
+  async findAll() {
+    return await this.album.find({
+      relations: ['artistId'],
+      loadRelationIds: true,
+    });
+  }
+
+  async findOne(id: string) {
+    const album = await this.album.findOne({
+      where: { id },
+      relations: ['artistId'],
+      loadRelationIds: true,
+    });
+    if (album) return album;
+    return;
+  }
+
+  async update(id: string, updateAlbumDto: UpdateAlbumDto) {
+    const album = await this.album.findOne({ where: { id } });
+    if (album) {
+      Object.assign(album, updateAlbumDto);
+      return await this.album.save(album);
+    }
+    return;
+  }
+
+  async remove(id: string) {
+    const result = await this.album.delete(id);
+    if (result.affected === 0) return;
+    return id;
   }
 }
