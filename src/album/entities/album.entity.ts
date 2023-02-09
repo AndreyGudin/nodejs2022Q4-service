@@ -18,7 +18,7 @@ export class Album {
   @ApiProperty()
   name: string;
 
-  @Column()
+  @Column({ type: 'int', nullable: true })
   @ApiProperty()
   year: number;
 

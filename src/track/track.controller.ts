@@ -51,7 +51,7 @@ export class TrackController {
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = this.trackService.findOne(id);
-    if (Object.keys(result).length > 0) return this.trackService.findOne(id);
+    if (result) return this.trackService.findOne(id);
     else throw new NotFoundException();
   }
 

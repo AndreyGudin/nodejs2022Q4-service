@@ -19,12 +19,13 @@ export class TrackDB
     return Object.assign({}, this.db.filter((track) => track.id === id)[0]);
   }
   create(createDTO: CreateTrackDto): Track {
-    const created = new Track({
-      id: randomUUID(),
-      ...createDTO,
-    });
-    this.db.push(created);
-    return created;
+    // const created = new Track({
+    //   id: randomUUID(),
+    //   ...createDTO,
+    // });
+    // this.db.push(created);
+    // return created;
+    return;
   }
 
   update(id: string, updateDTO: UpdateTrackDto): Track {

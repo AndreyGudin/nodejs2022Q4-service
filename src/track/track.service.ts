@@ -16,37 +16,65 @@ export class TrackService {
     private readonly artist: Repository<Artist>,
     @InjectRepository(Album)
     private readonly album: Repository<Album>,
-    @InjectRepository(Album)
+    @InjectRepository(Track)
     private readonly track: Repository<Track>,
     private readonly service: DB,
   ) {}
-  create(createTrackDto: CreateTrackDto) {
-    let isArtistExist: Artist | boolean = this.service.artists.findOne(
-      createTrackDto.artistId,
-    );
-    let isAlbumExist: Album | boolean = this.service.albums.findOne(
-      createTrackDto.albumId,
-    );
-    if (createTrackDto.artistId === null) isArtistExist = true;
-    if (createTrackDto.albumId === null) isAlbumExist = true;
-    if (isArtistExist && isAlbumExist)
-      return this.service.tracks.create(createTrackDto);
-    else return;
+  async create(createTrackDto: CreateTrackDto) {
+    const track: Track = {} as Track;
+    if (createTrackDto.albumId === null) {
+      track.albumId = null;
+    } else {
+      const album = await this.album.findOne({
+        where: { id: createTrackDto.albumId },
+      });
+      if (album) track.albumId = album.id;
+      else return;
+    }
+    if (createTrackDto.artistId === null) {
+      track.artistId = null;
+    } else {
+      const artist = await this.artist.findOne({
+        where: { id: createTrackDto.artistId },
+      });
+      if (artist) track.artistId = artist.id;
+      else return;
+    }
+    track.duration = createTrackDto.duration;
+    track.name = createTrackDto.name;
+    console.log('track', track);
+    return await this.track.save(track);
   }
 
-  findAll() {
-    return this.service.tracks.findAll();
+  async findAll() {
+    return await this.track.find({
+      relations: ['albumId'],
+      loadRelationIds: true,
+    });
   }
 
-  findOne(id: string) {
-    return this.service.tracks.findOne(id);
+  async findOne(id: string) {
+    const track = await this.track.findOne({
+      where: { id },
+      relations: ['artistId', 'albumId'],
+      loadRelationIds: true,
+    });
+    if (track) return track;
+    return;
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
-    return this.service.tracks.update(id, updateTrackDto);
+  async update(id: string, updateTrackDto: UpdateTrackDto) {
+    const track = await this.track.findOne({ where: { id } });
+    if (track) {
+      Object.assign(track, updateTrackDto);
+      return await this.track.save(track);
+    }
+    return;
   }
 
-  remove(id: string) {
-    return this.service.tracks.delete(id);
+  async remove(id: string) {
+    const result = await this.track.delete(id);
+    if (result.affected === 0) return;
+    return id;
   }
 }
