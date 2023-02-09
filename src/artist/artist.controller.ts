@@ -31,14 +31,14 @@ export class ArtistController {
   })
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createArtistDto: CreateArtistDto) {
-    return this.artistService.create(createArtistDto);
+  async create(@Body() createArtistDto: CreateArtistDto) {
+    return await this.artistService.create(createArtistDto);
   }
 
   @ApiResponse({ status: 200, type: [Artist] })
   @Get()
-  findAll() {
-    return this.artistService.findAll();
+  async findAll() {
+    return await this.artistService.findAll();
   }
 
   @ApiResponse({ status: 200, type: Artist })
@@ -48,8 +48,8 @@ export class ArtistController {
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.artistService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = await this.artistService.findOne(id);
     if (result) return result;
     else throw new NotFoundException();
   }
@@ -62,11 +62,11 @@ export class ArtistController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
-    const result = this.artistService.update(id, updateArtistDto);
+    const result = await this.artistService.update(id, updateArtistDto);
     if (result) return result;
     else throw new NotFoundException();
   }
@@ -79,8 +79,8 @@ export class ArtistController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.artistService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = await this.artistService.remove(id);
     if (result) return result;
     else throw new NotFoundException();
   }

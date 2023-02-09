@@ -31,16 +31,16 @@ export class AlbumController {
   })
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createAlbumDto: CreateAlbumDto) {
-    const result = this.albumService.create(createAlbumDto);
+  async create(@Body() createAlbumDto: CreateAlbumDto) {
+    const result = await this.albumService.create(createAlbumDto);
     if (result) return result;
     else return '';
   }
 
   @ApiResponse({ status: 200, type: [Album] })
   @Get()
-  findAll() {
-    return this.albumService.findAll();
+  async findAll() {
+    return await this.albumService.findAll();
   }
 
   @ApiResponse({ status: 200, type: Album })
@@ -50,8 +50,8 @@ export class AlbumController {
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.albumService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = await this.albumService.findOne(id);
     if (result) return this.albumService.findOne(id);
     else throw new NotFoundException();
   }
@@ -64,11 +64,11 @@ export class AlbumController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
-    const result = this.albumService.update(id, updateAlbumDto);
+    const result = await this.albumService.update(id, updateAlbumDto);
     if (result) return result;
     else throw new NotFoundException();
   }
@@ -82,8 +82,8 @@ export class AlbumController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.albumService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = await this.albumService.remove(id);
     if (result) return result;
     else throw new NotFoundException();
   }

@@ -18,7 +18,6 @@ export class TrackService {
     private readonly album: Repository<Album>,
     @InjectRepository(Track)
     private readonly track: Repository<Track>,
-    private readonly service: DB,
   ) {}
   async create(createTrackDto: CreateTrackDto) {
     const track: Track = {} as Track;
@@ -42,7 +41,6 @@ export class TrackService {
     }
     track.duration = createTrackDto.duration;
     track.name = createTrackDto.name;
-    console.log('track', track);
     return await this.track.save(track);
   }
 
@@ -59,6 +57,7 @@ export class TrackService {
       relations: ['artistId', 'albumId'],
       loadRelationIds: true,
     });
+    console.log('track', track);
     if (track) return track;
     return;
   }

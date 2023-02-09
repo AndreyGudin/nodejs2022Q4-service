@@ -30,16 +30,16 @@ export class TrackController {
   })
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createTrackDto: CreateTrackDto) {
-    const result = this.trackService.create(createTrackDto);
+  async create(@Body() createTrackDto: CreateTrackDto) {
+    const result = await this.trackService.create(createTrackDto);
     if (result) return result;
     else return '';
   }
 
   @ApiResponse({ status: 200, type: [Track] })
   @Get()
-  findAll() {
-    return this.trackService.findAll();
+  async findAll() {
+    return await this.trackService.findAll();
   }
 
   @ApiResponse({ status: 200, type: Track })
@@ -49,9 +49,10 @@ export class TrackController {
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.trackService.findOne(id);
-    if (result) return this.trackService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = await this.trackService.findOne(id);
+    console.log('result', result);
+    if (result) return result;
     else throw new NotFoundException();
   }
 
@@ -63,11 +64,11 @@ export class TrackController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
-    const result = this.trackService.update(id, updateTrackDto);
+    const result = await this.trackService.update(id, updateTrackDto);
     if (result) return result;
     else throw new NotFoundException();
   }
@@ -80,8 +81,8 @@ export class TrackController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.trackService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = await this.trackService.remove(id);
     if (result) return result;
     else throw new NotFoundException();
   }
