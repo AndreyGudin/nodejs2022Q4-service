@@ -14,16 +14,26 @@ export class AlbumService {
     private readonly artist: Repository<Artist>,
     @InjectRepository(Album)
     private readonly album: Repository<Album>,
-    private readonly service: DB,
   ) {}
   async create(createAlbumDto: CreateAlbumDto) {
-    const isExist: Artist = await this.artist.findOne({
-      where: { id: createAlbumDto.artistId },
-    });
-    if (isExist) {
+    console.log('createAlbumDto', createAlbumDto);
+    if (createAlbumDto.artistId === null) {
       const newAlbum = new Album({
         name: createAlbumDto.name,
-        artistId: isExist.id,
+        artistId: null,
+        year: createAlbumDto.year,
+      });
+      console.log('null');
+      return await this.album.save(newAlbum);
+    }
+    const artist: Artist = await this.artist.findOne({
+      where: { id: createAlbumDto.artistId },
+    });
+    console.log('createAlbumDto.artistId', createAlbumDto.artistId);
+    if (artist) {
+      const newAlbum = new Album({
+        name: createAlbumDto.name,
+        artistId: artist.id,
         year: createAlbumDto.year,
       });
 
