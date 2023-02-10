@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Artist } from 'src/artist/entities/artist.entity';
+import { Fav } from 'src/favs/entities/fav.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -26,6 +28,9 @@ export class Album {
   @JoinColumn()
   @ApiProperty()
   artistId: string;
+
+  @ManyToOne(() => Fav, (fav) => fav.albums)
+  favId: string;
 
   constructor(partial: Partial<Album>) {
     Object.assign(this, partial);

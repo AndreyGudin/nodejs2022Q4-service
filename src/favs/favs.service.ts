@@ -1,43 +1,75 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Album } from 'src/album/entities/album.entity';
 import { Artist } from 'src/artist/entities/artist.entity';
-import DB from 'src/db/db';
 import { Track } from 'src/track/entities/track.entity';
-import { Fav, FavoritesResponse } from './entities/fav.entity';
+import { FindOperator, Repository } from 'typeorm';
+import { Fav } from './entities/fav.entity';
+
+type Reps = {
+  artists: Repository<Artist>;
+  albums: Repository<Album>;
+  tracks: Repository<Track>;
+  favs: Repository<Fav>;
+};
 
 @Injectable()
 export class FavsService {
-  constructor(private readonly service: DB) {}
-  create(id: string, key: keyof Fav) {
-    const obj = this.service[key].findOne(id);
-    console.log('obj', obj);
-    if (Object.keys(obj).length > 0) return this.service.favs.create(id, key);
-    else return;
+  constructor(
+    @InjectRepository(Artist)
+    private readonly artists: Repository<Artist>,
+    @InjectRepository(Album)
+    private readonly albums: Repository<Album>,
+    @InjectRepository(Track)
+    private readonly tracks: Repository<Track>,
+    @InjectRepository(Fav)
+    private readonly favs: Repository<Fav>,
+  ) {}
+  async create(
+    id: (string | FindOperator<string>) & (number | FindOperator<number>),
+    key: keyof Reps,
+  ) {
+    const obj = await this[key].findOne({ where: { id } });
+    const fav = await this.favs.findOne({
+      where: { id: 0 },
+      relations: ['artists', 'albums', 'tracks'],
+    });
+    if (obj) {
+      const isFav = fav[key].findIndex((obj) => obj.id === id);
+      if (isFav === -1) {
+        fav[key] = [...fav[key], obj];
+        return await this.favs.save(fav);
+      }
+      return 'Already in favorites';
+    }
+    return;
   }
 
-  findAll(): FavoritesResponse {
-    const response: FavoritesResponse = {
-      artists: this.service.favs.db.artists.map((id) => {
-        const isExist = this.service.artists.findOne(id);
-        if (isExist) return Object.assign({}, this.service.artists.findOne(id));
-      }),
-      albums: this.service.favs.db.albums.map((id) => {
-        const isExist = this.service.albums.findOne(id);
-        if (isExist) return Object.assign({}, this.service.albums.findOne(id));
-      }),
-      tracks: this.service.favs.db.tracks.map((id) => {
-        const isExist = this.service.tracks.findOne(id);
-        if (isExist) return Object.assign({}, this.service.tracks.findOne(id));
-      }),
-    };
-    return response;
+  async findAll() {
+    const { artists, albums, tracks } = (
+      await this.favs.find({
+        relations: ['artists', 'albums', 'tracks'],
+      })
+    )[0];
+    return { artists, albums, tracks };
   }
 
-  remove(id: string, key: keyof Fav) {
-    const obj = this.service.favs.db[key].find(
-      (idToDelete) => idToDelete === id,
-    );
-    if (obj) return this.service.favs.delete(id, key);
-    else return;
+  async remove(
+    id: (string | FindOperator<string>) & (number | FindOperator<number>),
+    key: keyof Reps,
+  ) {
+    const obj = await this[key].findOne({ where: { id } });
+    const fav = await this.favs.findOne({
+      where: { id: 0 },
+      relations: ['artists', 'albums', 'tracks'],
+    });
+    if (obj) {
+      const itToDelete = fav[key].findIndex((obj) => obj.id === id);
+      if (itToDelete > -1) {
+        fav[key].splice(itToDelete, 1);
+        return await this.favs.save(fav);
+      }
+    }
+    return;
   }
 }

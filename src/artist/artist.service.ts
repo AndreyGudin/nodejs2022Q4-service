@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import DB from 'src/db/db';
 import { Repository } from 'typeorm';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
@@ -11,7 +10,6 @@ export class ArtistService {
   constructor(
     @InjectRepository(Artist)
     private readonly artist: Repository<Artist>,
-    private readonly service: DB,
   ) {}
   async create(createArtistDto: CreateArtistDto) {
     const artist = this.artist.create(createArtistDto);

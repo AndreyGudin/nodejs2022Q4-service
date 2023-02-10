@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Artist } from 'src/artist/entities/artist.entity';
-import DB from 'src/db/db';
 import { Repository } from 'typeorm';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -16,20 +15,17 @@ export class AlbumService {
     private readonly album: Repository<Album>,
   ) {}
   async create(createAlbumDto: CreateAlbumDto) {
-    console.log('createAlbumDto', createAlbumDto);
     if (createAlbumDto.artistId === null) {
       const newAlbum = new Album({
         name: createAlbumDto.name,
         artistId: null,
         year: createAlbumDto.year,
       });
-      console.log('null');
       return await this.album.save(newAlbum);
     }
     const artist: Artist = await this.artist.findOne({
       where: { id: createAlbumDto.artistId },
     });
-    console.log('createAlbumDto.artistId', createAlbumDto.artistId);
     if (artist) {
       const newAlbum = new Album({
         name: createAlbumDto.name,

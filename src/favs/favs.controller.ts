@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Track } from 'src/track/entities/track.entity';
+import { FindOperator } from 'typeorm';
 import { Fav, FavoritesResponse } from './entities/fav.entity';
 import { FavsService } from './favs.service';
 
@@ -26,7 +27,10 @@ export class FavsController {
   })
   @ApiResponse({ status: 422, description: 'Not Found' })
   @Post('/track/:id')
-  createTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+  createTrack(
+    @Param('id', new ParseUUIDPipe())
+    id: (string | FindOperator<string>) & (number | FindOperator<number>),
+  ) {
     const result = this.favsService.create(id, 'tracks');
     if (result) return result;
     else
@@ -42,7 +46,10 @@ export class FavsController {
   })
   @ApiResponse({ status: 422, description: 'Not Found' })
   @Post('/album/:id')
-  createAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+  createAlbum(
+    @Param('id', new ParseUUIDPipe())
+    id: (string | FindOperator<string>) & (number | FindOperator<number>),
+  ) {
     const result = this.favsService.create(id, 'albums');
     if (result) return result;
     else
@@ -58,7 +65,10 @@ export class FavsController {
   })
   @ApiResponse({ status: 422, description: 'Not Found' })
   @Post('/artist/:id')
-  createArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+  createArtist(
+    @Param('id', new ParseUUIDPipe())
+    id: (string | FindOperator<string>) & (number | FindOperator<number>),
+  ) {
     const result = this.favsService.create(id, 'artists');
     if (result) return result;
     else
@@ -81,7 +91,10 @@ export class FavsController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @Delete('/artist/:id')
   @HttpCode(204)
-  removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+  removeArtist(
+    @Param('id', new ParseUUIDPipe())
+    id: (string | FindOperator<string>) & (number | FindOperator<number>),
+  ) {
     const result = this.favsService.remove(id, 'artists');
     if (result) return result;
     else throw new NotFoundException();
@@ -94,7 +107,10 @@ export class FavsController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @Delete('/album/:id')
   @HttpCode(204)
-  removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+  removeAlbum(
+    @Param('id', new ParseUUIDPipe())
+    id: (string | FindOperator<string>) & (number | FindOperator<number>),
+  ) {
     const result = this.favsService.remove(id, 'albums');
     if (result) return result;
     else throw new NotFoundException();
@@ -107,7 +123,10 @@ export class FavsController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @Delete('/track/:id')
   @HttpCode(204)
-  removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+  removeTrack(
+    @Param('id', new ParseUUIDPipe())
+    id: (string | FindOperator<string>) & (number | FindOperator<number>),
+  ) {
     const result = this.favsService.remove(id, 'tracks');
     if (result) return result;
     else throw new NotFoundException();
