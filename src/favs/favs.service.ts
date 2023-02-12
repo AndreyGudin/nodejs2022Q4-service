@@ -46,12 +46,12 @@ export class FavsService {
   }
 
   async findAll() {
-    const { artists, albums, tracks } = (
+    const result = (
       await this.favs.find({
         relations: ['artists', 'albums', 'tracks'],
       })
     )[0];
-    return { artists, albums, tracks };
+    return result;
   }
 
   async remove(

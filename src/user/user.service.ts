@@ -15,8 +15,8 @@ export class UserService {
     const createdUser = new User({
       login: createUserDto.login,
       password: createUserDto.password,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
       version: 1,
     });
     return await this.user.save(createdUser);
@@ -37,7 +37,7 @@ export class UserService {
     if (user) {
       user.password = updateUserDto.newPassword;
       user.version += 1;
-      user.updatedAt = new Date();
+      user.updatedAt = Date.now();
       return await this.user.save(user);
     }
     return;
