@@ -21,11 +21,16 @@ export class Track {
 
   @OneToOne(() => Artist, { onDelete: 'SET NULL' })
   @JoinColumn()
+  artist: string;
+  @Column({ type: 'text', nullable: true })
   artistId: string;
 
   @OneToOne(() => Album, { onDelete: 'SET NULL' })
   @JoinColumn()
+  album: string;
+  @Column({ type: 'text', nullable: true })
   albumId: string;
+
   @Column()
   duration: number;
 

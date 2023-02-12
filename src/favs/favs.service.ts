@@ -34,6 +34,15 @@ export class FavsService {
       where: { id: 0 },
       relations: ['artists', 'albums', 'tracks'],
     });
+    if (!fav) {
+      const empty = this.favs.create({
+        id: 0,
+        albums: [],
+        artists: [],
+        tracks: [],
+      });
+      await this.favs.save(empty);
+    }
     if (obj) {
       const isFav = fav[key].findIndex((obj) => obj.id === id);
       if (isFav === -1) {
@@ -46,12 +55,21 @@ export class FavsService {
   }
 
   async findAll() {
-    const result = (
+    let result = (
       await this.favs.find({
         relations: ['artists', 'albums', 'tracks'],
       })
     )[0];
-    return result;
+    if (!result) {
+      const empty = new Fav({
+        id: 0,
+        albums: [],
+        artists: [],
+        tracks: [],
+      });
+      result = await this.favs.save(empty);
+    }
+    return result.createResponse();
   }
 
   async remove(

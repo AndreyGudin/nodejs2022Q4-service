@@ -39,17 +39,12 @@ export class AlbumService {
   }
 
   async findAll() {
-    return await this.album.find({
-      relations: ['artistId'],
-      loadRelationIds: true,
-    });
+    return await this.album.find();
   }
 
   async findOne(id: string) {
     const album = await this.album.findOne({
       where: { id },
-      relations: ['artistId'],
-      loadRelationIds: true,
     });
     if (album) return album;
     return;

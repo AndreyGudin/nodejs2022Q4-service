@@ -44,17 +44,12 @@ export class TrackService {
   }
 
   async findAll() {
-    return await this.track.find({
-      relations: ['albumId'],
-      loadRelationIds: true,
-    });
+    return await this.track.find();
   }
 
   async findOne(id: string) {
     const track = await this.track.findOne({
       where: { id },
-      relations: ['artistId', 'albumId'],
-      loadRelationIds: true,
     });
     console.log('track', track);
     if (track) return track;

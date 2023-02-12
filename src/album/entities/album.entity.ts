@@ -27,6 +27,8 @@ export class Album {
   @OneToOne(() => Artist, { onDelete: 'SET NULL' })
   @JoinColumn()
   @ApiProperty()
+  artist: string;
+  @Column({ type: 'text', nullable: true })
   artistId: string;
 
   @ManyToOne(() => Fav, (fav) => fav.albums)
