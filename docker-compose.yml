@@ -26,6 +26,8 @@ services:
       - .env
     environment:
       PG_DATA: /val/lib/postgres/data
+      POSTGRES_DB: '${POSTGRES_DATABASE}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
     ports:
       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
     volumes:
