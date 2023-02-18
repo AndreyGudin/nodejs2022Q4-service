@@ -6,6 +6,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.app
+    image: areonix/nodejs2022q4_home_library:latest
     env_file:
       - .env
     volumes:
@@ -16,6 +17,8 @@ services:
     command: npm run start:dev
     depends_on:
       - db
+    networks:
+      - api-network
     restart: always
   db:
     container_name: db
@@ -32,4 +35,10 @@ services:
       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
     volumes:
       - ./pgdata:/val/lib/postgres/data
+    networks:
+      - api-network
     restart: always
+
+networks:
+  api-network:
+    driver: bridge
