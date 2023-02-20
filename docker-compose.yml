@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-      - ./logs:/app/logs
+      - "logs:/app/logs"
     ports:
       - '${PORT}:${PORT}'
     command: npm run start:dev
@@ -35,7 +35,7 @@ services:
     ports:
       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
     volumes:
-      - ./pgdata:/val/lib/postgres/data
+      - "pgdata:/val/lib/postgres/data"
     networks:
       - api-network
     restart: always
@@ -43,3 +43,7 @@ services:
 networks:
   api-network:
     driver: bridge
+
+volumes:
+  pgdata:
+  logs:
