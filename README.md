@@ -17,12 +17,23 @@ git clone {repository URL}
 npm install
 ```
 
-## Running application
-
+## Running docker image
+1. Build images
 ```
-npm start
+docker compose build
 ```
-
+2. Start images
+```
+docker compose up
+```
+3. Run tests
+```
+npm run test
+```
+4. Run scan
+```
+npm run scan
+```
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.

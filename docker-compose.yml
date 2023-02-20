@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: app
+    build:
+      context: ./
+      dockerfile: Dockerfile.app
+    image: areonix/nodejs2022q4_home_library:latest
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - "logs:/app/logs"
+    ports:
+      - '${PORT}:${PORT}'
+    command: npm run start:dev
+    depends_on:
+      - db
+    networks:
+      - api-network
+    restart: always
+  db:
+    container_name: db
+    build: 
+      context: ./
+      dockerfile: Dockerfile.db
+    env_file:
+      - .env
+    environment:
+      PG_DATA: /val/lib/postgres/data
+      POSTGRES_DB: '${POSTGRES_DATABASE}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    volumes:
+      - "pgdata:/val/lib/postgres/data"
+    networks:
+      - api-network
+    restart: always
+
+networks:
+  api-network:
+    driver: bridge
+
+volumes:
+  pgdata:
+  logs:
