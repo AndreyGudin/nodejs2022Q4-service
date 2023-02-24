@@ -15,14 +15,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
   async signUp(createUserDto: CreateUserDto) {
-    const createdUser = new User({
-      login: createUserDto.login,
-      password: createUserDto.password,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      version: 1,
-    });
-    console.log('process.env.CRYPT_SALT', process.env.CRYPT_SALT);
     const user = await this.userService.findOne({
       where: { login: createUserDto.login },
     });
@@ -31,10 +23,14 @@ export class AuthService {
       createUserDto.password,
       +process.env.CRYPT_SALT,
     );
-    return await this.userService.save({
-      ...createdUser,
+    const createdUser = this.userService.create({
+      login: createUserDto.login,
       password: hashPassword,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      version: 1,
     });
+    return await this.userService.save(createdUser);
   }
 
   async login(createUserDto: CreateUserDto) {
