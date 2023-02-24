@@ -35,4 +35,25 @@ export class AuthService {
       password: hashPassword,
     });
   }
+
+  async signin(createUserDto: CreateUserDto) {
+    const user = await this.userService.findOne({
+      where: { login: createUserDto.login },
+    });
+    const isPasswordEqual = await bcrypt.compare(
+      createUserDto.password,
+      user.password,
+    );
+    const payload = { userId: user.id, login: user.login };
+    if (isPasswordEqual && user) {
+      return {
+        token: this.jwtService.sign(payload),
+        refreshToken: this.jwtService.sign(payload, {
+          secret: process.env.JWT_SECRET_REFRESH_KEY,
+          expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+        }),
+      };
+    }
+    return;
+  }
 }
