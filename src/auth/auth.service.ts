@@ -22,13 +22,14 @@ export class AuthService {
       updatedAt: Date.now(),
       version: 1,
     });
+    console.log('process.env.CRYPT_SALT', process.env.CRYPT_SALT);
     const user = await this.userService.findOne({
       where: { login: createUserDto.login },
     });
     if (user) return;
     const hashPassword = await bcrypt.hash(
       createUserDto.password,
-      process.env.CRYPT_SALT,
+      +process.env.CRYPT_SALT,
     );
     return await this.userService.save({
       ...createdUser,
@@ -36,7 +37,7 @@ export class AuthService {
     });
   }
 
-  async signin(createUserDto: CreateUserDto) {
+  async login(createUserDto: CreateUserDto) {
     const user = await this.userService.findOne({
       where: { login: createUserDto.login },
     });
