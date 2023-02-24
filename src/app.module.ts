@@ -9,6 +9,7 @@ import { FavsModule } from './favs/favs.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ormConfig } from './ormconfig';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ormConfig } from './ormconfig';
     FavsModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(ormConfig),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
