@@ -44,13 +44,34 @@ export class AuthService {
     const payload = { userId: user.id, login: user.login };
     if (isPasswordEqual && user) {
       return {
-        token: this.jwtService.sign(payload),
-        refreshToken: this.jwtService.sign(payload, {
-          secret: process.env.JWT_SECRET_REFRESH_KEY,
-          expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
-        }),
+        token: this.generateToken(payload),
+        refreshToken: this.generateRefreshToken(payload),
       };
     }
     return;
+  }
+
+  refresh(token: string) {
+    try {
+      const isTokenValid = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET_REFRESH_KEY,
+      });
+      return {
+        token: this.generateToken(isTokenValid),
+        refreshToken: this.generateRefreshToken(isTokenValid),
+      };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  private generateToken(payload) {
+    return this.jwtService.sign(payload);
+  }
+  private generateRefreshToken(payload) {
+    return this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET_REFRESH_KEY,
+      expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+    });
   }
 }
