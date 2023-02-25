@@ -53,12 +53,12 @@ export class AuthService {
 
   refresh(token: string) {
     try {
-      const isTokenValid = this.jwtService.verify(token, {
+      const { userId, login } = this.jwtService.verify(token, {
         secret: process.env.JWT_SECRET_REFRESH_KEY,
       });
       return {
-        token: this.generateToken(isTokenValid),
-        refreshToken: this.generateRefreshToken(isTokenValid),
+        token: this.generateToken({ userId, login }),
+        refreshToken: this.generateRefreshToken({ userId, login }),
       };
     } catch (error) {
       return error;

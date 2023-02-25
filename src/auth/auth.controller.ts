@@ -24,7 +24,9 @@ export class AuthController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('/signup')
   async signUp(@Body() createUserDto: CreateUserDto) {
-    return await this.authService.signUp(createUserDto);
+    const result = await this.authService.signUp(createUserDto);
+    if (result) return result;
+    return 'User already exist';
   }
 
   @Post('/login')
@@ -35,6 +37,7 @@ export class AuthController {
   @Post('/refresh')
   refresh(@Body() { refreshToken }: RefreshTokenDto) {
     const result = this.authService.refresh(refreshToken);
+    console.log('result', result);
     if ('token' in result) return result;
     throw new ForbiddenException({ message: result });
   }
