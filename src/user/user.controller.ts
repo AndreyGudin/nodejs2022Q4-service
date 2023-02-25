@@ -12,12 +12,14 @@ import {
   Put,
   ForbiddenException,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('Пользователи')
 @Controller('user')
@@ -30,6 +32,7 @@ export class UserController {
     description: 'Invalid body',
   })
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
@@ -37,6 +40,7 @@ export class UserController {
 
   @ApiResponse({ status: 200, type: [User] })
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     return await this.usersService.findAll();
@@ -49,6 +53,7 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = await this.usersService.findOne(id);
@@ -63,6 +68,7 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -82,6 +88,7 @@ export class UserController {
     description: 'Validation failed (uuid  is expected)',
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id', new ParseUUIDPipe()) id: string) {

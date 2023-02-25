@@ -11,8 +11,10 @@ import {
   ParseUUIDPipe,
   NotFoundException,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -29,6 +31,7 @@ export class ArtistController {
     status: 400,
     description: 'Invalid body',
   })
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   async create(@Body() createArtistDto: CreateArtistDto) {
@@ -36,6 +39,7 @@ export class ArtistController {
   }
 
   @ApiResponse({ status: 200, type: [Artist] })
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     return await this.artistService.findAll();
@@ -47,6 +51,7 @@ export class ArtistController {
     description: 'Validation failed (uuid  is expected)',
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = await this.artistService.findOne(id);
@@ -61,6 +66,7 @@ export class ArtistController {
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -77,6 +83,7 @@ export class ArtistController {
     description: 'Validation failed (uuid  is expected)',
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id', new ParseUUIDPipe()) id: string) {
