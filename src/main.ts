@@ -13,6 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new CustomLogger(),
   });
+  const logger = new CustomLogger();
   const PORT = process.env.PORT || 4001;
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new LoggingInterceptor());
@@ -27,5 +28,13 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   await app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+  process.on('uncaughtException', (error) => {
+    logger.error(`Uncaught Exception: \n error: ${error}`);
+  });
+
+  process.on('unhandledRejection', (reason) => {
+    logger.error(`Unhandled Rejection: \n error: ${JSON.stringify(reason)}`);
+  });
 }
 bootstrap();
