@@ -44,7 +44,7 @@ export class AuthService {
     const payload = { userId: user.id, login: user.login };
     if (isPasswordEqual && user) {
       return {
-        token: this.generateToken(payload),
+        accessToken: this.generateToken(payload),
         refreshToken: this.generateRefreshToken(payload),
       };
     }
@@ -57,7 +57,7 @@ export class AuthService {
         secret: process.env.JWT_SECRET_REFRESH_KEY,
       });
       return {
-        token: this.generateToken({ userId, login }),
+        accessToken: this.generateToken({ userId, login }),
         refreshToken: this.generateRefreshToken({ userId, login }),
       };
     } catch (error) {
