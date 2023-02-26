@@ -57,7 +57,7 @@ export class CustomLogger extends ConsoleLogger {
     super.log(message);
   }
 
-  async error(message: string, stack?: string, context?: string) {
+  async error(message: string, stack?: string) {
     await this.writeToFile('error', stack, 'Error');
     super.error(message);
   }
