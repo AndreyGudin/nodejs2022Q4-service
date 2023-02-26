@@ -2,18 +2,19 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
-import { dirname, join } from 'node:path';
 dotenv.config();
 
 import { AppModule } from './app.module';
-import { MyLogger } from './customLogger/customLogger';
+import { CustomLogger } from './customLogger/customLogger.service';
+import { LoggingInterceptor } from './customLogger/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: new MyLogger(),
+    logger: new CustomLogger(),
   });
   const PORT = process.env.PORT || 4001;
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalInterceptors(new LoggingInterceptor());
   const config = new DocumentBuilder()
     .setTitle('Audio Library')
     .setDescription('The Audio Library API description')

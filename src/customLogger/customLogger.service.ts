@@ -2,7 +2,7 @@ import { ConsoleLogger } from '@nestjs/common/services';
 import { appendFile, mkdir, stat, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-export class MyLogger extends ConsoleLogger {
+export class CustomLogger extends ConsoleLogger {
   /**
    * Write a 'log' level log.
    */
@@ -29,7 +29,10 @@ export class MyLogger extends ConsoleLogger {
     await mkdir(pathToFolder, {
       recursive: true,
     });
-    const amount = (await readdir(pathToFolder)).length;
+    const amount = (await readdir(pathToFolder)).filter(
+      (a) => a.split('_')[0] === name,
+    ).length;
+    console.log('amount', amount);
     try {
       const { size } = await stat(file(amount));
       const sizeInKB = size / 1024;
@@ -60,8 +63,8 @@ export class MyLogger extends ConsoleLogger {
   /**
    * Write an 'error' level log.
    */
-  async error(message: string) {
-    await this.writeToFile('error', message, 'Error');
+  async error(message: string, stack?: string, context?: string) {
+    await this.writeToFile('error', stack, 'Error');
     super.error(message);
   }
 

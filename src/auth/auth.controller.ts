@@ -35,15 +35,19 @@ export class AuthController {
   @Post('/login')
   async login(@Body() createUserDto: CreateUserDto) {
     const result = await this.authService.login(createUserDto);
-    if (result) return result;
-    throw new BadRequestException();
+    console.log('result', result);
+    if (typeof result === 'object') return result;
+    throw new ForbiddenException({
+      message: result,
+      statusCode: HttpStatus.FORBIDDEN,
+    });
   }
 
   @Post('/refresh')
   refresh(@Body() { refreshToken }: RefreshTokenDto) {
     if (refreshToken) {
       const result = this.authService.refresh(refreshToken);
-      if ('token' in result) return result;
+      if ('accessToken' in result) return result;
       throw new ForbiddenException({
         message: 'Refresh token is invalid or expired',
         statusCode: HttpStatus.FORBIDDEN,

@@ -37,18 +37,21 @@ export class AuthService {
     const user = await this.userService.findOne({
       where: { login: createUserDto.login },
     });
-    const isPasswordEqual = await bcrypt.compare(
-      createUserDto.password,
-      user.password,
-    );
-    const payload = { userId: user.id, login: user.login };
-    if (isPasswordEqual && user) {
-      return {
-        accessToken: this.generateToken(payload),
-        refreshToken: this.generateRefreshToken(payload),
-      };
+    if (user) {
+      const isPasswordEqual = await bcrypt.compare(
+        createUserDto.password,
+        user.password,
+      );
+      const payload = { userId: user.id, login: user.login };
+      if (isPasswordEqual && user) {
+        return {
+          accessToken: this.generateToken(payload),
+          refreshToken: this.generateRefreshToken(payload),
+        };
+      }
+      return `Password doesn't match actual one`;
     }
-    return;
+    return 'No such user';
   }
 
   refresh(token: string) {
