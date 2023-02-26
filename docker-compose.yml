@@ -12,7 +12,8 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-      - "logs:/app/logs"
+      - 'logs:/app/logs'
+      - ./logs:/app/dist/logs
     ports:
       - '${PORT}:${PORT}'
     command: npm run start:dev
@@ -23,7 +24,7 @@ services:
     restart: always
   db:
     container_name: db
-    build: 
+    build:
       context: ./
       dockerfile: Dockerfile.db
     env_file:
@@ -35,7 +36,7 @@ services:
     ports:
       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
     volumes:
-      - "pgdata:/val/lib/postgres/data"
+      - 'pgdata:/val/lib/postgres/data'
     networks:
       - api-network
     restart: always

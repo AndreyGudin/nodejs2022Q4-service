@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { CustomLogger } from './customLogger.service';
 
 @Injectable()

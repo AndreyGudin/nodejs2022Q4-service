@@ -23,7 +23,8 @@
     "migration:generate": "npm run typeorm -- migration:generate",
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert",
-    "scan": "docker scan areonix/nodejs2022q4_home_library:latest"
+    "scan": "docker scan areonix/nodejs2022q4_home_library:latest",
+    "docker:start": "npm run build && docker compose up --build"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
