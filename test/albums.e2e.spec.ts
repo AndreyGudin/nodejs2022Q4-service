@@ -141,7 +141,11 @@ describe('Album (e2e)', () => {
         responses.every(
           ({ statusCode }) => statusCode === StatusCodes.BAD_REQUEST,
         ),
+<<<<<<< HEAD
       );
+=======
+      ).toBe(true);
+>>>>>>> 2e92b263cdcbc29a187b0409783d8d6fb7c7ade2
     });
   });
 

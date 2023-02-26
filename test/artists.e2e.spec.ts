@@ -6,7 +6,11 @@ import {
   shouldAuthorizationBeTested,
   removeTokenUser,
 } from './utils';
+<<<<<<< HEAD
 import { artistsRoutes, albumsRoutes, tracksRoutes } from './endpoints';
+=======
+import { albumsRoutes, artistsRoutes, tracksRoutes } from './endpoints';
+>>>>>>> 2e92b263cdcbc29a187b0409783d8d6fb7c7ade2
 
 const createArtistDto = {
   name: 'TEST_artist',
@@ -134,7 +138,11 @@ describe('artist (e2e)', () => {
         responses.every(
           ({ statusCode }) => statusCode === StatusCodes.BAD_REQUEST,
         ),
+<<<<<<< HEAD
       );
+=======
+      ).toBe(true);
+>>>>>>> 2e92b263cdcbc29a187b0409783d8d6fb7c7ade2
     });
   });
 
@@ -300,5 +308,50 @@ describe('artist (e2e)', () => {
 
       expect(trackArtistId).toBeNull();
     });
+<<<<<<< HEAD
+=======
+
+    it('should set album.artistId to null after deletion', async () => {
+      const creationArtistResponse = await unauthorizedRequest
+        .post(artistsRoutes.create)
+        .set(commonHeaders)
+        .send(createArtistDto);
+
+      const { id: artistId } = creationArtistResponse.body;
+
+      const createAlbumDto = {
+        name: 'TEST_album',
+        year: 2023,
+        artistId,
+      };
+
+      expect(creationArtistResponse.status).toBe(StatusCodes.CREATED);
+
+      const creationAlbumResponse = await unauthorizedRequest
+        .post(albumsRoutes.create)
+        .set(commonHeaders)
+        .send(createAlbumDto);
+
+      const { id: albumId } = creationAlbumResponse.body;
+
+      expect(creationAlbumResponse.statusCode).toBe(StatusCodes.CREATED);
+
+      const artistDeletionResponse = await unauthorizedRequest
+        .delete(artistsRoutes.delete(artistId))
+        .set(commonHeaders);
+
+      expect(artistDeletionResponse.statusCode).toBe(StatusCodes.NO_CONTENT);
+
+      const searchAlbumResponse = await unauthorizedRequest
+        .get(albumsRoutes.getById(albumId))
+        .set(commonHeaders);
+
+      expect(searchAlbumResponse.statusCode).toBe(StatusCodes.OK);
+
+      const { artistId: albumArtistId } = searchAlbumResponse.body;
+
+      expect(albumArtistId).toBeNull();
+    });
+>>>>>>> 2e92b263cdcbc29a187b0409783d8d6fb7c7ade2
   });
 });
