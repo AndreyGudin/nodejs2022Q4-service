@@ -3,9 +3,6 @@ import { appendFile, mkdir, stat, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
 export class CustomLogger extends ConsoleLogger {
-  /**
-   * Write a 'log' level log.
-   */
   currentDate = new Intl.DateTimeFormat('ru', {
     year: 'numeric',
     month: 'numeric',
@@ -32,7 +29,7 @@ export class CustomLogger extends ConsoleLogger {
     const amount = (await readdir(pathToFolder)).filter(
       (a) => a.split('_')[0] === name,
     ).length;
-    console.log('amount', amount);
+
     try {
       const { size } = await stat(file(amount));
       const sizeInKB = size / 1024;
@@ -60,17 +57,11 @@ export class CustomLogger extends ConsoleLogger {
     super.log(message);
   }
 
-  /**
-   * Write an 'error' level log.
-   */
   async error(message: string, stack?: string, context?: string) {
     await this.writeToFile('error', stack, 'Error');
     super.error(message);
   }
 
-  /**
-   * Write a 'warn' level log.
-   */
   async warn(message: string) {
     await this.writeToFile('log', message, 'Warning');
     super.warn(message);

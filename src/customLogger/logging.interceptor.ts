@@ -11,20 +11,23 @@ import { CustomLogger } from './customLogger.service';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  async intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Promise<Observable<any>> {
     const logger = new CustomLogger();
     const { body, url, query }: Request = context.switchToHttp().getRequest();
     const message = `Request: \n url: ${url},\n body: ${JSON.stringify(
       body,
     )},\n query: ${JSON.stringify(query)}\n`;
-    logger.log(message);
+    await logger.log(message);
     return next.handle().pipe(
-      map((data) => {
+      map(async (data) => {
         const res: Response = context.switchToHttp().getResponse();
         const message = `Response: \n body: ${JSON.stringify(
           data,
         )},\n statusCode: ${res.statusCode}`;
-        logger.log(message);
+        await logger.log(message);
         return data;
       }),
     );
