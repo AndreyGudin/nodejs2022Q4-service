@@ -15,7 +15,7 @@ export class CustomLogger extends ConsoleLogger {
     second: 'numeric',
     hour12: false,
   });
-
+  fileSize = +process.env.LOG_FILE_SIZE;
   getFolder() {
     const end = __dirname.indexOf('dist');
     const folder = __dirname.substring(0, end + 4);
@@ -36,7 +36,7 @@ export class CustomLogger extends ConsoleLogger {
     try {
       const { size } = await stat(file(amount));
       const sizeInKB = size / 1024;
-      if (sizeInKB > 2) {
+      if (sizeInKB > this.fileSize) {
         await appendFile(
           file(amount + 1),
           `${this.currentDate.format(new Date())} ${type}: ${data} \n`,
