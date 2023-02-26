@@ -1,7 +1,6 @@
-import { LoggerService } from '@nestjs/common';
 import { ConsoleLogger } from '@nestjs/common/services';
 import { appendFile, mkdir, stat, readdir } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
 
 export class MyLogger extends ConsoleLogger {
   /**
