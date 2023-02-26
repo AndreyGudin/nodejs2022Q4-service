@@ -2,11 +2,16 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
+import { dirname, join } from 'node:path';
 dotenv.config();
+
 import { AppModule } from './app.module';
+import { MyLogger } from './customLogger/customLogger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new MyLogger(),
+  });
   const PORT = process.env.PORT || 4001;
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
