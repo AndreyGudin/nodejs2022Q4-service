@@ -11,8 +11,9 @@ import {
   ParseUUIDPipe,
   NotFoundException,
 } from '@nestjs/common';
-import { HttpCode } from '@nestjs/common/decorators';
+import { HttpCode, UseGuards } from '@nestjs/common/decorators';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -30,6 +31,7 @@ export class AlbumController {
     description: 'Invalid body',
   })
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createAlbumDto: CreateAlbumDto) {
     const result = await this.albumService.create(createAlbumDto);
@@ -38,6 +40,7 @@ export class AlbumController {
   }
 
   @ApiResponse({ status: 200, type: [Album] })
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     return await this.albumService.findAll();
@@ -49,6 +52,7 @@ export class AlbumController {
     description: 'Validation failed (uuid  is expected)',
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const result = await this.albumService.findOne(id);
@@ -63,6 +67,7 @@ export class AlbumController {
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -79,6 +84,7 @@ export class AlbumController {
     description: 'Validation failed (uuid  is expected)',
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @Delete(':id')
   @HttpCode(204)

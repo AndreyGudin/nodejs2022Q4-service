@@ -18,22 +18,24 @@ npm install
 ```
 
 ## Running docker image
-1. Build images
+
+1. Start images
+
 ```
-docker compose build
+npm run docker:start
 ```
-2. Start images
-```
-docker compose up
-```
+
 3. Run tests
+
 ```
-npm run test
+npm run test:auth
 ```
-4. Run scan
-```
-npm run scan
-```
+
+4. Check logs in folder withih src /logs
+
+![image](https://user-images.githubusercontent.com/43149000/221426684-361268f4-ab54-4d68-af07-02a834a0e8f2.png)
+
+
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.

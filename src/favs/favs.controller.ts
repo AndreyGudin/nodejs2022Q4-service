@@ -9,8 +9,10 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { FindOperator } from 'typeorm';
 import { Fav, FavoritesResponse } from './entities/fav.entity';
 import { FavsService } from './favs.service';
@@ -25,6 +27,7 @@ export class FavsController {
     description: 'Validation failed (uuid  is expected)',
   })
   @ApiResponse({ status: 422, description: 'Not Found' })
+  @UseGuards(JwtAuthGuard)
   @Post('/track/:id')
   async createTrack(
     @Param('id', new ParseUUIDPipe())
@@ -44,6 +47,7 @@ export class FavsController {
     description: 'Validation failed (uuid  is expected)',
   })
   @ApiResponse({ status: 422, description: 'Not Found' })
+  @UseGuards(JwtAuthGuard)
   @Post('/album/:id')
   async createAlbum(
     @Param('id', new ParseUUIDPipe())
@@ -63,6 +67,7 @@ export class FavsController {
     description: 'Validation failed (uuid  is expected)',
   })
   @ApiResponse({ status: 422, description: 'Not Found' })
+  @UseGuards(JwtAuthGuard)
   @Post('/artist/:id')
   async createArtist(
     @Param('id', new ParseUUIDPipe())
@@ -78,6 +83,7 @@ export class FavsController {
   }
 
   @ApiResponse({ status: 200, type: FavoritesResponse })
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     return this.favsService.findAll();
@@ -88,6 +94,7 @@ export class FavsController {
     description: 'Validation failed (uuid  is expected)',
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
+  @UseGuards(JwtAuthGuard)
   @Delete('/artist/:id')
   @HttpCode(204)
   async removeArtist(
@@ -104,6 +111,7 @@ export class FavsController {
     description: 'Validation failed (uuid  is expected)',
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
+  @UseGuards(JwtAuthGuard)
   @Delete('/album/:id')
   @HttpCode(204)
   async removeAlbum(
@@ -120,6 +128,7 @@ export class FavsController {
     description: 'Validation failed (uuid  is expected)',
   })
   @ApiResponse({ status: 404, description: 'Not Found' })
+  @UseGuards(JwtAuthGuard)
   @Delete('/track/:id')
   @HttpCode(204)
   async removeTrack(
