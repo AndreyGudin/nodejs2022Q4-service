@@ -19,22 +19,16 @@ npm install
 
 ## Running docker image
 
-1. Build images
+1. Start images
 
 ```
-docker compose build
-```
-
-2. Start images
-
-```
-docker compose up
+npm run docker:start
 ```
 
 3. Run tests
 
 ```
-npm run test
+npm run test:auth
 ```
 
 4. Run scan
