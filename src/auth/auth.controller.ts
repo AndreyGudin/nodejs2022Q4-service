@@ -1,11 +1,14 @@
 import {
+  BadRequestException,
   Body,
   ClassSerializerInterceptor,
   Controller,
   ForbiddenException,
   Post,
+  UnauthorizedException,
   UseInterceptors,
 } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common/enums';
 import { ApiResponse } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { User } from 'src/user/entities/user.entity';
@@ -26,19 +29,26 @@ export class AuthController {
   async signUp(@Body() createUserDto: CreateUserDto) {
     const result = await this.authService.signUp(createUserDto);
     if (result) return result;
-    return 'User already exist';
+    throw new BadRequestException();
   }
 
   @Post('/login')
   async login(@Body() createUserDto: CreateUserDto) {
-    return await this.authService.login(createUserDto);
+    const result = await this.authService.login(createUserDto);
+    if (result) return result;
+    throw new BadRequestException();
   }
 
   @Post('/refresh')
   refresh(@Body() { refreshToken }: RefreshTokenDto) {
-    const result = this.authService.refresh(refreshToken);
-    console.log('result', result);
-    if ('token' in result) return result;
-    throw new ForbiddenException({ message: result });
+    if (refreshToken) {
+      const result = this.authService.refresh(refreshToken);
+      if ('token' in result) return result;
+      throw new ForbiddenException({
+        message: 'Refresh token is invalid or expired',
+        statusCode: HttpStatus.FORBIDDEN,
+      });
+    }
+    throw new UnauthorizedException();
   }
 }
